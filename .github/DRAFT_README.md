@@ -1,305 +1,220 @@
-# Create a GitHub Action Using TypeScript
+# Get Job Summary GitHub Action
 
-[![GitHub Super-Linter](https://github.com/actions/typescript-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
-![CI](https://github.com/actions/typescript-action/actions/workflows/ci.yml/badge.svg)
-[![Check dist/](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/check-dist.yml)
-[![CodeQL](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/actions/typescript-action/actions/workflows/codeql-analysis.yml)
+[![GitHub Super-Linter](https://github.com/yuki/get-job-summary/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
+![CI](https://github.com/yuki/get-job-summary/actions/workflows/ci.yml/badge.svg)
+[![Check dist/](https://github.com/yuki/get-job-summary/actions/workflows/check-dist.yml/badge.svg)](https://github.com/yuki/get-job-summary/actions/workflows/check-dist.yml)
+[![CodeQL](https://github.com/yuki/get-job-summary/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/yuki/get-job-summary/actions/workflows/codeql-analysis.yml)
 [![Coverage](./badges/coverage.svg)](./badges/coverage.svg)
 
-Use this template to bootstrap the creation of a TypeScript action. :rocket:
+A TypeScript-based GitHub Action to retrieve job summary URLs and comprehensive
+job information from GitHub Actions workflows. This action provides easy access
+to job logs, summaries, and metadata that are not typically available in the
+default workflow context.
 
-This template includes compilation support, tests, a validation workflow,
-publishing, and versioning guidance.
+## Features
 
-If you are new, there's also a simpler introduction in the
-[Hello world JavaScript action repository](https://github.com/actions/hello-world-javascript-action).
+- 🔗 **Job Summary URL**: Direct link to job summary and logs
+- 📊 **Comprehensive Job Information**: Status, conclusion, timing, and more
+- 🏗️ **Workflow Metadata**: Workflow name, path, and run number
+- 🔧 **Extensible Design**: Built to grow with additional features
+- 🛡️ **Type-Safe**: Written in TypeScript with full type safety
 
-## Create Your Own Action
-
-To create your own action, you can use this repository as a template! Just
-follow the below instructions:
-
-1. Click the **Use this template** button at the top of the repository
-1. Select **Create a new repository**
-1. Select an owner and name for your new repository
-1. Click **Create repository**
-1. Clone your new repository
-
-> [!IMPORTANT]
->
-> Make sure to remove or update the [`CODEOWNERS`](./CODEOWNERS) file! For
-> details on how to use this file, see
-> [About code owners](https://docs.github.com/en/repositories/managing-your-repositories-settings-and-features/customizing-your-repository/about-code-owners).
-
-## Initial Setup
-
-After you've cloned the repository to your local machine or codespace, you'll
-need to perform some initial setup steps before you can develop your action.
-
-> [!NOTE]
->
-> You'll need to have a reasonably modern version of
-> [Node.js](https://nodejs.org) handy (20.x or later should work!). If you are
-> using a version manager like [`nodenv`](https://github.com/nodenv/nodenv) or
-> [`fnm`](https://github.com/Schniz/fnm), this template has a `.node-version`
-> file at the root of the repository that can be used to automatically switch to
-> the correct version when you `cd` into the repository. Additionally, this
-> `.node-version` file is used by GitHub Actions in any `actions/setup-node`
-> actions.
-
-1. :hammer_and_wrench: Install the dependencies
-
-   ```bash
-   npm install
-   ```
-
-1. :building_construction: Package the TypeScript for distribution
-
-   ```bash
-   npm run bundle
-   ```
-
-1. :white_check_mark: Run the tests
-
-   ```bash
-   $ npm test
-
-   PASS  ./index.test.js
-     ✓ throws invalid number (3ms)
-     ✓ wait 500 ms (504ms)
-     ✓ test runs (95ms)
-
-   ...
-   ```
-
-## Update the Action Metadata
-
-The [`action.yml`](action.yml) file defines metadata about your action, such as
-input(s) and output(s). For details about this file, see
-[Metadata syntax for GitHub Actions](https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions).
-
-When you copy this repository, update `action.yml` with the name, description,
-inputs, and outputs for your action.
-
-## Update the Action Code
-
-The [`src/`](./src/) directory is the heart of your action! This contains the
-source code that will be run when your action is invoked. You can replace the
-contents of this directory with your own code.
-
-There are a few things to keep in mind when writing your action code:
-
-- Most GitHub Actions toolkit and CI/CD operations are processed asynchronously.
-  In `main.ts`, you will see that the action is run in an `async` function.
-
-  ```javascript
-  import * as core from '@actions/core'
-  //...
-
-  async function run() {
-    try {
-      //...
-    } catch (error) {
-      core.setFailed(error.message)
-    }
-  }
-  ```
-
-  For more information about the GitHub Actions toolkit, see the
-  [documentation](https://github.com/actions/toolkit/blob/master/README.md).
-
-So, what are you waiting for? Go ahead and start customizing your action!
-
-1. Create a new branch
-
-   ```bash
-   git checkout -b releases/v1
-   ```
-
-1. Replace the contents of `src/` with your action code
-1. Add tests to `__tests__/` for your source code
-1. Format, test, and build the action
-
-   ```bash
-   npm run all
-   ```
-
-   > This step is important! It will run [`rollup`](https://rollupjs.org/) to
-   > build the final JavaScript action code with all dependencies included. If
-   > you do not run this step, your action will not work correctly when it is
-   > used in a workflow.
-
-1. (Optional) Test your action locally
-
-   The [`@github/local-action`](https://github.com/github/local-action) utility
-   can be used to test your action locally. It is a simple command-line tool
-   that "stubs" (or simulates) the GitHub Actions Toolkit. This way, you can run
-   your TypeScript action locally without having to commit and push your changes
-   to a repository.
-
-   The `local-action` utility can be run in the following ways:
-   - Visual Studio Code Debugger
-
-     Make sure to review and, if needed, update
-     [`.vscode/launch.json`](./.vscode/launch.json)
-
-   - Terminal/Command Prompt
-
-     ```bash
-     # npx @github/local action <action-yaml-path> <entrypoint> <dotenv-file>
-     npx @github/local-action . src/main.ts .env
-     ```
-
-   You can provide a `.env` file to the `local-action` CLI to set environment
-   variables used by the GitHub Actions Toolkit. For example, setting inputs and
-   event payload data used by your action. For more information, see the example
-   file, [`.env.example`](./.env.example), and the
-   [GitHub Actions Documentation](https://docs.github.com/en/actions/learn-github-actions/variables#default-environment-variables).
-
-1. Commit your changes
-
-   ```bash
-   git add .
-   git commit -m "My first action is ready!"
-   ```
-
-1. Push them to your repository
-
-   ```bash
-   git push -u origin releases/v1
-   ```
-
-1. Create a pull request and get feedback on your action
-1. Merge the pull request into the `main` branch
-
-Your action is now published! :rocket:
-
-For information about versioning your action, see
-[Versioning](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-in the GitHub Actions toolkit.
-
-## Validate the Action
-
-You can now validate the action by referencing it in a workflow file. For
-example, [`ci.yml`](./.github/workflows/ci.yml) demonstrates how to reference an
-action in the same repository.
+## Quick Start
 
 ```yaml
-steps:
-  - name: Checkout
-    id: checkout
-    uses: actions/checkout@v4
+- name: Get Job Summary
+  uses: yuki/get-job-summary@v1
+  id: job-info
+  with:
+    github_token: ${{ secrets.GITHUB_TOKEN }}
 
-  - name: Test Local Action
-    id: test-action
-    uses: ./
-    with:
-      milliseconds: 1000
-
-  - name: Print Output
-    id: output
-    run: echo "${{ steps.test-action.outputs.time }}"
+- name: Display Job Summary URL
+  run: echo "Job Summary: ${{ steps.job-info.outputs.job_summary_url }}"
 ```
 
-For example workflow runs, check out the
-[Actions tab](https://github.com/actions/typescript-action/actions)! :rocket:
+## Inputs
 
-## Usage
+| Input          | Description                                      | Required | Default                     |
+| -------------- | ------------------------------------------------ | -------- | --------------------------- |
+| `repository`   | The owner and repository name (e.g., owner/repo) | No       | `${{ github.repository }}`  |
+| `server_url`   | The URL of the GitHub server                     | No       | `${{ github.server_url }}`  |
+| `workflow`     | The name or ID of the workflow                   | No       | `${{ github.workflow }}`    |
+| `run_id`       | The ID of the workflow run                       | No       | `${{ github.run_id }}`      |
+| `run_attempt`  | The attempt number of the workflow run           | No       | `${{ github.run_attempt }}` |
+| `job`          | The job name                                     | No       | `${{ github.job }}`         |
+| `github_token` | GitHub token for API access                      | No       | `${{ github.token }}`       |
 
-After testing, you can create version tag(s) that developers can use to
-reference different stable versions of your action. For more information, see
-[Versioning](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-in the GitHub Actions toolkit.
+## Outputs
 
-To include the action in a workflow in another repository, you can use the
-`uses` syntax with the `@` symbol to reference a specific branch, tag, or commit
-hash.
+| Output                | Description                                                   |
+| --------------------- | ------------------------------------------------------------- |
+| `run_url`             | The URL of the workflow run                                   |
+| `job_id`              | The ID of the job                                             |
+| `job_name`            | The name of the job                                           |
+| `job_url`             | The URL of the job                                            |
+| `job_summary_url`     | The URL of the job summary                                    |
+| `job_summary_raw_url` | The raw URL of the job summary                                |
+| `job_status`          | The status of the job (queued, in_progress, completed)        |
+| `job_conclusion`      | The conclusion of the job (success, failure, cancelled, etc.) |
+| `job_started_at`      | When the job started (ISO 8601 format)                        |
+| `job_completed_at`    | When the job completed (ISO 8601 format)                      |
+| `workflow_name`       | The name of the workflow                                      |
+| `workflow_path`       | The path of the workflow file                                 |
+| `run_number`          | The run number of the workflow                                |
+
+## Use Cases
+
+### 1. Comment on Pull Request with Job Summary
 
 ```yaml
-steps:
-  - name: Checkout
-    id: checkout
-    uses: actions/checkout@v4
+name: Build and Test
+on: [pull_request]
 
-  - name: Test Local Action
-    id: test-action
-    uses: actions/typescript-action@v1 # Commit with the `v1` tag
-    with:
-      milliseconds: 1000
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-  - name: Print Output
-    id: output
-    run: echo "${{ steps.test-action.outputs.time }}"
+      - name: Run tests
+        run: npm test
+
+      - name: Get Job Summary
+        uses: yuki/get-job-summary@v1
+        id: job-info
+
+      - name: Comment PR with Job Summary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `✅ Build completed! [View job summary](${{ steps.job-info.outputs.job_summary_url }})`
+            })
 ```
 
-## Publishing a New Release
+### 2. Send Slack Notification with Job Details
 
-This project includes a helper script, [`script/release`](./script/release)
-designed to streamline the process of tagging and pushing new releases for
-GitHub Actions.
+```yaml
+- name: Get Job Summary
+  uses: yuki/get-job-summary@v1
+  id: job-info
 
-GitHub Actions allows users to select a specific version of the action to use,
-based on release tags. This script simplifies this process by performing the
-following steps:
+- name: Notify Slack
+  uses: slackapi/slack-github-action@v1
+  with:
+    payload: |
+      {
+        "text": "Workflow completed",
+        "blocks": [
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*${{ steps.job-info.outputs.workflow_name }}* #${{ steps.job-info.outputs.run_number }}\nStatus: ${{ steps.job-info.outputs.job_status }}\n<${{ steps.job-info.outputs.job_summary_url }}|View Summary>"
+            }
+          }
+        ]
+      }
+```
 
-1. **Retrieving the latest release tag:** The script starts by fetching the most
-   recent SemVer release tag of the current branch, by looking at the local data
-   available in your repository.
-1. **Prompting for a new release tag:** The user is then prompted to enter a new
-   release tag. To assist with this, the script displays the tag retrieved in
-   the previous step, and validates the format of the inputted tag (vX.X.X). The
-   user is also reminded to update the version field in package.json.
-1. **Tagging the new release:** The script then tags a new release and syncs the
-   separate major tag (e.g. v1, v2) with the new release tag (e.g. v1.0.0,
-   v2.1.2). When the user is creating a new major release, the script
-   auto-detects this and creates a `releases/v#` branch for the previous major
-   version.
-1. **Pushing changes to remote:** Finally, the script pushes the necessary
-   commits, tags and branches to the remote repository. From here, you will need
-   to create a new release in GitHub so users can easily reference the new tags
-   in their workflows.
+### 3. Create Issue on Failure with Job Link
 
-## Dependency License Management
+```yaml
+- name: Get Job Summary
+  if: failure()
+  uses: yuki/get-job-summary@v1
+  id: job-info
 
-This template includes a GitHub Actions workflow,
-[`licensed.yml`](./.github/workflows/licensed.yml), that uses
-[Licensed](https://github.com/licensee/licensed) to check for dependencies with
-missing or non-compliant licenses. This workflow is initially disabled. To
-enable the workflow, follow the below steps.
+- name: Create Issue
+  if: failure()
+  uses: actions/github-script@v7
+  with:
+    script: |
+      github.rest.issues.create({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        title: `Build failed: ${context.workflow} #${context.runNumber}`,
+        body: `The workflow failed. [View job logs](${{ steps.job-info.outputs.job_url }})`
+      })
+```
 
-1. Open [`licensed.yml`](./.github/workflows/licensed.yml)
-1. Uncomment the following lines:
+## Development
 
-   ```yaml
-   # pull_request:
-   #   branches:
-   #     - main
-   # push:
-   #   branches:
-   #     - main
-   ```
+### Prerequisites
 
-1. Save and commit the changes
+- Node.js 20.x or later
+- npm or yarn
 
-Once complete, this workflow will run any time a pull request is created or
-changes pushed directly to `main`. If the workflow detects any dependencies with
-missing or non-compliant licenses, it will fail the workflow and provide details
-on the issue(s) found.
-
-### Updating Licenses
-
-Whenever you install or update dependencies, you can use the Licensed CLI to
-update the licenses database. To install Licensed, see the project's
-[Readme](https://github.com/licensee/licensed?tab=readme-ov-file#installation).
-
-To update the cached licenses, run the following command:
+### Setup
 
 ```bash
-licensed cache
+# Clone the repository
+git clone https://github.com/yuki/get-job-summary.git
+cd get-job-summary
+
+# Install dependencies
+npm install
+
+# Run tests
+npm test
+
+# Build the action
+npm run bundle
 ```
 
-To check the status of cached licenses, run the following command:
+### Testing Locally
+
+You can test the action locally using the `@github/local-action` tool:
 
 ```bash
-licensed status
+npm run local-action
 ```
+
+### Project Structure
+
+```
+get-job-summary/
+├── src/
+│   ├── main.ts      # Main action logic
+│   └── index.ts     # Entry point
+├── __tests__/       # Test files
+├── dist/            # Compiled output
+├── action.yml       # Action metadata
+└── package.json     # Dependencies and scripts
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## Versioning
+
+This action follows semantic versioning. When creating a new release:
+
+1. Update the version in `package.json`
+2. Run `npm run bundle` to build the action
+3. Commit the changes
+4. Create a new release with a tag (e.g., `v1.0.0`)
+5. Update the major version tag (e.g., `v1`) to point to the latest release
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
+for details.
+
+## Acknowledgments
+
+- Inspired by
+  [ipdxco/job-summary-url-action](https://github.com/ipdxco/job-summary-url-action)
+- Built with [GitHub Actions Toolkit](https://github.com/actions/toolkit)
+- TypeScript template from
+  [actions/typescript-action](https://github.com/actions/typescript-action)
