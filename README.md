@@ -45,7 +45,7 @@ including:
 
 | Input          | Description                                      | Required | Default                     |
 | -------------- | ------------------------------------------------ | -------- | --------------------------- |
-| `repository`   | The owner and repository name (e.g., owner/repo) | No       | `${{ github.repository }}`  |
+| `repository`   | The owner and repository name (e.g., owner/repository) | No       | `${{ github.repository }}`  |
 | `server_url`   | The URL of the GitHub server                     | No       | `${{ github.server_url }}`  |
 | `workflow`     | The name or ID of the workflow                   | No       | `${{ github.workflow }}`    |
 | `run_id`       | The ID of the workflow run                       | No       | `${{ github.run_id }}`      |
@@ -108,7 +108,7 @@ jobs:
 ### Prerequisites
 
 - Node.js 20.x or later
-- npm or yarn
+- npm or Yarn
 
 ### Setup
 
