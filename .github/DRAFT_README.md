@@ -34,15 +34,15 @@ default workflow context.
 
 ## Inputs
 
-| Input          | Description                                      | Required | Default                     |
-| -------------- | ------------------------------------------------ | -------- | --------------------------- |
+| Input          | Description                                            | Required | Default                     |
+| -------------- | ------------------------------------------------------ | -------- | --------------------------- |
 | `repository`   | The owner and repository name (e.g., owner/repository) | No       | `${{ github.repository }}`  |
-| `server_url`   | The URL of the GitHub server                     | No       | `${{ github.server_url }}`  |
-| `workflow`     | The name or ID of the workflow                   | No       | `${{ github.workflow }}`    |
-| `run_id`       | The ID of the workflow run                       | No       | `${{ github.run_id }}`      |
-| `run_attempt`  | The attempt number of the workflow run           | No       | `${{ github.run_attempt }}` |
-| `job`          | The job name                                     | No       | `${{ github.job }}`         |
-| `github_token` | GitHub token for API access                      | No       | `${{ github.token }}`       |
+| `server_url`   | The URL of the GitHub server                           | No       | `${{ github.server_url }}`  |
+| `workflow`     | The name or ID of the workflow                         | No       | `${{ github.workflow }}`    |
+| `run_id`       | The ID of the workflow run                             | No       | `${{ github.run_id }}`      |
+| `run_attempt`  | The attempt number of the workflow run                 | No       | `${{ github.run_attempt }}` |
+| `job`          | The job name                                           | No       | `${{ github.job }}`         |
+| `github_token` | GitHub token for API access                            | No       | `${{ github.token }}`       |
 
 ## Outputs
 
