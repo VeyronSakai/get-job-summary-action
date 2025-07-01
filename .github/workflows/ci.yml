@@ -60,15 +60,27 @@ jobs:
           job: 'GitHub Actions Test'
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Test Local Action with Anchor
+        id: test-action-anchor
+        uses: ./
+        with:
+          job: 'GitHub Actions Test'
+          include_job_summary_anchor: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Print Outputs
         id: output
         run: |
+          echo "=== Without Anchor ==="
           echo "Run URL: ${{ steps.test-action.outputs.run_url }}"
           echo "Job ID: ${{ steps.test-action.outputs.job_id }}"
           echo "Job Name: ${{ steps.test-action.outputs.job_name }}"
           echo "Job URL: ${{ steps.test-action.outputs.job_url }}"
           echo "Job Summary URL: ${{ steps.test-action.outputs.job_summary_url }}"
           echo "Workflow Name: ${{ steps.test-action.outputs.workflow_name }}"
+          echo ""
+          echo "=== With Anchor ==="
+          echo "Job Summary URL (with anchor): ${{ steps.test-action-anchor.outputs.job_summary_url }}"
 
       - name: Write Job Summary
         run: |
@@ -77,7 +89,7 @@ jobs:
             echo ""
             echo "This is a test job summary to verify the action outputs."
             echo ""
-            echo "## Action Outputs"
+            echo "## Action Outputs (Default - No Anchor)"
             echo ""
             echo "| Output | Value |"
             echo "|--------:|-------|"
@@ -89,6 +101,12 @@ jobs:
             echo "| Job Status | ${{ steps.test-action.outputs.job_status }} |"
             echo "| Workflow Name | ${{ steps.test-action.outputs.workflow_name }} |"
             echo "| Run Number | ${{ steps.test-action.outputs.run_number }} |"
+            echo ""
+            echo "## Action Outputs (With Anchor)"
+            echo ""
+            echo "| Output | Value |"
+            echo "|--------:|-------|"
+            echo "| Job Summary URL (with anchor) | ${{ steps.test-action-anchor.outputs.job_summary_url }} |"
             echo ""
             echo "✅ Test completed successfully!"
           } >> "$GITHUB_STEP_SUMMARY"
