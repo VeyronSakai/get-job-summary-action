@@ -52,8 +52,8 @@ default workflow context.
 | `job_id`              | The ID of the job                                             |
 | `job_name`            | The name of the job                                           |
 | `job_url`             | The URL of the job                                            |
-| `job_summary_url`     | The URL of the job summary                                    |
-| `job_summary_raw_url` | The raw URL of the job summary                                |
+| `job_summary_url`     | The URL of the workflow run summary page                      |
+| `job_summary_raw_url` | The raw URL of the job logs                                   |
 | `job_status`          | The status of the job (queued, in_progress, completed)        |
 | `job_conclusion`      | The conclusion of the job (success, failure, cancelled, etc.) |
 | `job_started_at`      | When the job started (ISO 8601 format)                        |

@@ -55,21 +55,21 @@ including:
 
 ## Outputs
 
-| Output                | Description                    |
-| --------------------- | ------------------------------ |
-| `run_url`             | The URL of the workflow run    |
-| `job_id`              | The ID of the job              |
-| `job_name`            | The name of the job            |
-| `job_url`             | The URL of the job             |
-| `job_summary_url`     | The URL of the job summary     |
-| `job_summary_raw_url` | The raw URL of the job summary |
-| `job_status`          | The status of the job          |
-| `job_conclusion`      | The conclusion of the job      |
-| `job_started_at`      | When the job started           |
-| `job_completed_at`    | When the job completed         |
-| `workflow_name`       | The name of the workflow       |
-| `workflow_path`       | The path of the workflow file  |
-| `run_number`          | The run number of the workflow |
+| Output                | Description                              |
+| --------------------- | ---------------------------------------- |
+| `run_url`             | The URL of the workflow run              |
+| `job_id`              | The ID of the job                        |
+| `job_name`            | The name of the job                      |
+| `job_url`             | The URL of the job                       |
+| `job_summary_url`     | The URL of the workflow run summary page |
+| `job_summary_raw_url` | The raw URL of the job logs              |
+| `job_status`          | The status of the job                    |
+| `job_conclusion`      | The conclusion of the job                |
+| `job_started_at`      | When the job started                     |
+| `job_completed_at`    | When the job completed                   |
+| `workflow_name`       | The name of the workflow                 |
+| `workflow_path`       | The path of the workflow file            |
+| `run_number`          | The run number of the workflow           |
 
 ## Example Workflow
 

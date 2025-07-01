@@ -31262,7 +31262,7 @@ async function run() {
         }
         const runUrl = `${serverUrl}/${owner}/${repo}/actions/runs/${runId}`;
         const jobUrl = `${runUrl}/job/${job.id}`;
-        const jobSummaryUrl = `${jobUrl}?pr=${runId}`;
+        const jobSummaryUrl = runUrl;
         const jobSummaryRawUrl = `${serverUrl}/${owner}/${repo}/commit/${job.head_sha}/checks/${job.id}/logs`;
         const jobInfo = {
             runUrl,

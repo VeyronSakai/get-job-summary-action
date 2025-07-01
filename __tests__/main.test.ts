@@ -82,7 +82,7 @@ describe('main.ts', () => {
     )
     expect(core.setOutput).toHaveBeenCalledWith(
       'job_summary_url',
-      'https://github.com/owner/repo/actions/runs/12345/job/54321?pr=12345'
+      'https://github.com/owner/repo/actions/runs/12345'
     )
     expect(core.setOutput).toHaveBeenCalledWith('job_status', 'completed')
     expect(core.setOutput).toHaveBeenCalledWith('job_conclusion', 'success')
