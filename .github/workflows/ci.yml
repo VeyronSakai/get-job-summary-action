@@ -72,21 +72,23 @@ jobs:
 
       - name: Write Job Summary
         run: |
-          echo "# GitHub Actions Test Job Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "This is a test job summary to verify the action outputs." >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "## Action Outputs" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "| Output | Value |" >> $GITHUB_STEP_SUMMARY
-          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
-          echo "| Run URL | ${{ steps.test-action.outputs.run_url }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Job ID | ${{ steps.test-action.outputs.job_id }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Job Name | ${{ steps.test-action.outputs.job_name }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Job URL | ${{ steps.test-action.outputs.job_url }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Job Summary URL | ${{ steps.test-action.outputs.job_summary_url }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Job Status | ${{ steps.test-action.outputs.job_status }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Workflow Name | ${{ steps.test-action.outputs.workflow_name }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Run Number | ${{ steps.test-action.outputs.run_number }} |" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Test completed successfully!" >> $GITHUB_STEP_SUMMARY
+          {
+            echo "# GitHub Actions Test Job Summary"
+            echo ""
+            echo "This is a test job summary to verify the action outputs."
+            echo ""
+            echo "## Action Outputs"
+            echo ""
+            echo "| Output | Value |"
+            echo "|--------:|-------|"
+            echo "| Run URL | ${{ steps.test-action.outputs.run_url }} |"
+            echo "| Job ID | ${{ steps.test-action.outputs.job_id }} |"
+            echo "| Job Name | ${{ steps.test-action.outputs.job_name }} |"
+            echo "| Job URL | ${{ steps.test-action.outputs.job_url }} |"
+            echo "| Job Summary URL | ${{ steps.test-action.outputs.job_summary_url }} |"
+            echo "| Job Status | ${{ steps.test-action.outputs.job_status }} |"
+            echo "| Workflow Name | ${{ steps.test-action.outputs.workflow_name }} |"
+            echo "| Run Number | ${{ steps.test-action.outputs.run_number }} |"
+            echo ""
+            echo "✅ Test completed successfully!"
+          } >> "$GITHUB_STEP_SUMMARY"
