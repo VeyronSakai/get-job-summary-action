@@ -34,15 +34,16 @@ default workflow context.
 
 ## Inputs
 
-| Input          | Description                                            | Required | Default                     |
-| -------------- | ------------------------------------------------------ | -------- | --------------------------- |
-| `repository`   | The owner and repository name (e.g., owner/repository) | No       | `${{ github.repository }}`  |
-| `server_url`   | The URL of the GitHub server                           | No       | `${{ github.server_url }}`  |
-| `workflow`     | The name or ID of the workflow                         | No       | `${{ github.workflow }}`    |
-| `run_id`       | The ID of the workflow run                             | No       | `${{ github.run_id }}`      |
-| `run_attempt`  | The attempt number of the workflow run                 | No       | `${{ github.run_attempt }}` |
-| `job`          | The job name                                           | No       | `${{ github.job }}`         |
-| `github_token` | GitHub token for API access                            | No       | `${{ github.token }}`       |
+| Input                        | Description                                                              | Required | Default                     |
+| ---------------------------- | ------------------------------------------------------------------------ | -------- | --------------------------- |
+| `repository`                 | The owner and repository name (e.g., owner/repository)                   | No       | `${{ github.repository }}`  |
+| `server_url`                 | The URL of the GitHub server                                             | No       | `${{ github.server_url }}`  |
+| `workflow`                   | The name or ID of the workflow                                           | No       | `${{ github.workflow }}`    |
+| `run_id`                     | The ID of the workflow run                                               | No       | `${{ github.run_id }}`      |
+| `run_attempt`                | The attempt number of the workflow run                                   | No       | `${{ github.run_attempt }}` |
+| `job`                        | The job name                                                             | No       | `${{ github.job }}`         |
+| `github_token`               | GitHub token for API access                                              | No       | `${{ github.token }}`       |
+| `include_job_summary_anchor` | Include anchor to specific job in job_summary_url (e.g., #summary-12345) | No       | `false`                     |
 
 ## Outputs
 
@@ -138,6 +139,29 @@ jobs:
         repo: context.repo.repo,
         title: `Build failed: ${context.workflow} #${context.runNumber}`,
         body: `The workflow failed. [View job logs](${{ steps.job-info.outputs.job_url }})`
+      })
+```
+
+### 4. Direct Link to Specific Job Summary
+
+```yaml
+- name: Get Job Summary with Anchor
+  uses: yuki/get-job-summary@v1
+  id: job-info
+  with:
+    include_job_summary_anchor: true
+
+- name: Post Comment with Direct Link
+  uses: actions/github-script@v7
+  with:
+    script: |
+      // This will link directly to the specific job within the workflow run
+      // Example: https://github.com/owner/repo/actions/runs/12345#summary-67890
+      github.rest.issues.createComment({
+        issue_number: context.issue.number,
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        body: `📊 [View job summary directly](${{ steps.job-info.outputs.job_summary_url }})`
       })
 ```
 

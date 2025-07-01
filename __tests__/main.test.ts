@@ -27,6 +27,13 @@ describe('main.ts', () => {
       return inputs[name] || ''
     })
 
+    core.getBooleanInput.mockImplementation((name: string) => {
+      if (name === 'include_job_summary_anchor') {
+        return false
+      }
+      return false
+    })
+
     const mockOctokit = {
       rest: {
         actions: {
@@ -110,5 +117,21 @@ describe('main.ts', () => {
     await run()
 
     expect(core.setFailed).toHaveBeenCalledWith('API Error')
+  })
+
+  it('includes anchor in job_summary_url when option is enabled', async () => {
+    core.getBooleanInput.mockImplementation((name: string) => {
+      if (name === 'include_job_summary_anchor') {
+        return true
+      }
+      return false
+    })
+
+    await run()
+
+    expect(core.setOutput).toHaveBeenCalledWith(
+      'job_summary_url',
+      'https://github.com/owner/repo/actions/runs/12345#summary-54321'
+    )
   })
 })

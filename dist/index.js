@@ -31242,6 +31242,7 @@ async function run() {
         const runAttempt = parseInt(coreExports.getInput('run_attempt'), 10);
         const jobName = coreExports.getInput('job');
         const token = coreExports.getInput('github_token');
+        const includeJobSummaryAnchor = coreExports.getBooleanInput('include_job_summary_anchor');
         const [owner, repo] = repository.split('/');
         const octokit = githubExports.getOctokit(token);
         coreExports.debug(`Getting job info for ${owner}/${repo} run ${runId} job ${jobName}`);
@@ -31262,7 +31263,9 @@ async function run() {
         }
         const runUrl = `${serverUrl}/${owner}/${repo}/actions/runs/${runId}`;
         const jobUrl = `${runUrl}/job/${job.id}`;
-        const jobSummaryUrl = runUrl;
+        const jobSummaryUrl = includeJobSummaryAnchor
+            ? `${runUrl}#summary-${job.id}`
+            : runUrl;
         const jobSummaryRawUrl = `${serverUrl}/${owner}/${repo}/commit/${job.head_sha}/checks/${job.id}/logs`;
         const jobInfo = {
             runUrl,

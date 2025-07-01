@@ -41,17 +41,34 @@ including:
     github_token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
+### Get Job Summary URL with Anchor
+
+```yaml
+- name: Get Job Summary with Direct Link to Job
+  uses: your-username/get-job-summary@v1
+  id: job-info
+  with:
+    include_job_summary_anchor: true
+    github_token: ${{ secrets.GITHUB_TOKEN }}
+
+- name: Display Job Summary URL with Anchor
+  run: |
+    # This will output: https://github.com/owner/repo/actions/runs/12345#summary-67890
+    echo "Direct link to job summary: ${{ steps.job-info.outputs.job_summary_url }}"
+```
+
 ## Inputs
 
-| Input          | Description                                            | Required | Default                     |
-| -------------- | ------------------------------------------------------ | -------- | --------------------------- |
-| `repository`   | The owner and repository name (e.g., owner/repository) | No       | `${{ github.repository }}`  |
-| `server_url`   | The URL of the GitHub server                           | No       | `${{ github.server_url }}`  |
-| `workflow`     | The name or ID of the workflow                         | No       | `${{ github.workflow }}`    |
-| `run_id`       | The ID of the workflow run                             | No       | `${{ github.run_id }}`      |
-| `run_attempt`  | The attempt number of the workflow run                 | No       | `${{ github.run_attempt }}` |
-| `job`          | The job name                                           | No       | `${{ github.job }}`         |
-| `github_token` | GitHub token for API access                            | No       | `${{ github.token }}`       |
+| Input                        | Description                                                              | Required | Default                     |
+| ---------------------------- | ------------------------------------------------------------------------ | -------- | --------------------------- |
+| `repository`                 | The owner and repository name (e.g., owner/repository)                   | No       | `${{ github.repository }}`  |
+| `server_url`                 | The URL of the GitHub server                                             | No       | `${{ github.server_url }}`  |
+| `workflow`                   | The name or ID of the workflow                                           | No       | `${{ github.workflow }}`    |
+| `run_id`                     | The ID of the workflow run                                               | No       | `${{ github.run_id }}`      |
+| `run_attempt`                | The attempt number of the workflow run                                   | No       | `${{ github.run_attempt }}` |
+| `job`                        | The job name                                                             | No       | `${{ github.job }}`         |
+| `github_token`               | GitHub token for API access                                              | No       | `${{ github.token }}`       |
+| `include_job_summary_anchor` | Include anchor to specific job in job_summary_url (e.g., #summary-12345) | No       | `false`                     |
 
 ## Outputs
 

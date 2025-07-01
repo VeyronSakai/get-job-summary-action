@@ -26,6 +26,9 @@ export async function run(): Promise<void> {
     const runAttempt = parseInt(core.getInput('run_attempt'), 10)
     const jobName = core.getInput('job')
     const token = core.getInput('github_token')
+    const includeJobSummaryAnchor = core.getBooleanInput(
+      'include_job_summary_anchor'
+    )
 
     const [owner, repo] = repository.split('/')
 
@@ -57,7 +60,9 @@ export async function run(): Promise<void> {
 
     const runUrl = `${serverUrl}/${owner}/${repo}/actions/runs/${runId}`
     const jobUrl = `${runUrl}/job/${job.id}`
-    const jobSummaryUrl = runUrl
+    const jobSummaryUrl = includeJobSummaryAnchor
+      ? `${runUrl}#summary-${job.id}`
+      : runUrl
     const jobSummaryRawUrl = `${serverUrl}/${owner}/${repo}/commit/${job.head_sha}/checks/${job.id}/logs`
 
     const jobInfo: JobInfo = {
