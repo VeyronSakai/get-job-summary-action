@@ -57,8 +57,38 @@ jobs:
         id: test-action
         uses: ./
         with:
-          milliseconds: 2000
+          job: 'GitHub Actions Test'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Print Output
+      - name: Print Outputs
         id: output
-        run: echo "${{ steps.test-action.outputs.time }}"
+        run: |
+          echo "Run URL: ${{ steps.test-action.outputs.run_url }}"
+          echo "Job ID: ${{ steps.test-action.outputs.job_id }}"
+          echo "Job Name: ${{ steps.test-action.outputs.job_name }}"
+          echo "Job URL: ${{ steps.test-action.outputs.job_url }}"
+          echo "Job Summary URL: ${{ steps.test-action.outputs.job_summary_url }}"
+          echo "Workflow Name: ${{ steps.test-action.outputs.workflow_name }}"
+
+      - name: Write Job Summary
+        run: |
+          {
+            echo "# GitHub Actions Test Job Summary"
+            echo ""
+            echo "This is a test job summary to verify the action outputs."
+            echo ""
+            echo "## Action Outputs"
+            echo ""
+            echo "| Output | Value |"
+            echo "|--------:|-------|"
+            echo "| Run URL | ${{ steps.test-action.outputs.run_url }} |"
+            echo "| Job ID | ${{ steps.test-action.outputs.job_id }} |"
+            echo "| Job Name | ${{ steps.test-action.outputs.job_name }} |"
+            echo "| Job URL | ${{ steps.test-action.outputs.job_url }} |"
+            echo "| Job Summary URL | ${{ steps.test-action.outputs.job_summary_url }} |"
+            echo "| Job Status | ${{ steps.test-action.outputs.job_status }} |"
+            echo "| Workflow Name | ${{ steps.test-action.outputs.workflow_name }} |"
+            echo "| Run Number | ${{ steps.test-action.outputs.run_number }} |"
+            echo ""
+            echo "✅ Test completed successfully!"
+          } >> "$GITHUB_STEP_SUMMARY"

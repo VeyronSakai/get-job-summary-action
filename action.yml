@@ -1,24 +1,68 @@
-name: The name of your action here
-description: Provide a description here
-author: Your name or organization here
-
-# Add your action's branding here. This will appear on the GitHub Marketplace.
+name: 'Get Job Summary'
+description: 'Get GitHub Actions job summary URL and other job information'
+author: 'Your Name'
 branding:
-  icon: heart
-  color: red
+  icon: 'info'
+  color: 'blue'
 
-# Define your inputs here.
 inputs:
-  milliseconds:
-    description: Your input description here
-    required: true
-    default: '1000'
+  repository:
+    description: 'The owner and repository name (e.g., owner/repo)'
+    required: false
+    default: ${{ github.repository }}
+  server_url:
+    description: 'The URL of the GitHub server'
+    required: false
+    default: ${{ github.server_url }}
+  workflow:
+    description: 'The name or ID of the workflow'
+    required: false
+    default: ${{ github.workflow }}
+  run_id:
+    description: 'The ID of the workflow run'
+    required: false
+    default: ${{ github.run_id }}
+  run_attempt:
+    description: 'The attempt number of the workflow run'
+    required: false
+    default: ${{ github.run_attempt }}
+  job:
+    description: 'The job name'
+    required: false
+    default: ${{ github.job }}
+  github_token:
+    description: 'GitHub token for API access'
+    required: false
+    default: ${{ github.token }}
 
-# Define your outputs here.
 outputs:
-  time:
-    description: Your output description here
+  run_url:
+    description: 'The URL of the workflow run'
+  job_id:
+    description: 'The ID of the job'
+  job_name:
+    description: 'The name of the job'
+  job_url:
+    description: 'The URL of the job'
+  job_summary_url:
+    description: 'The URL of the job summary'
+  job_summary_raw_url:
+    description: 'The raw URL of the job summary'
+  job_status:
+    description: 'The status of the job'
+  job_conclusion:
+    description: 'The conclusion of the job'
+  job_started_at:
+    description: 'When the job started'
+  job_completed_at:
+    description: 'When the job completed'
+  workflow_name:
+    description: 'The name of the workflow'
+  workflow_path:
+    description: 'The path of the workflow file'
+  run_number:
+    description: 'The run number of the workflow'
 
 runs:
-  using: node20
-  main: dist/index.js
+  using: 'node20'
+  main: 'dist/index.js'

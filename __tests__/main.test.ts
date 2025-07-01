@@ -1,62 +1,114 @@
-/**
- * Unit tests for the action's main functionality, src/main.ts
- *
- * To mock dependencies in ESM, you can create fixtures that export mock
- * functions and objects. For example, the core module is mocked in this test,
- * so that the actual '@actions/core' module is not imported.
- */
 import { jest } from '@jest/globals'
 import * as core from '../__fixtures__/core.js'
-import { wait } from '../__fixtures__/wait.js'
 
-// Mocks should be declared before the module being tested is imported.
+const mockGetOctokit = jest.fn()
+const mockGetWorkflowRun = jest.fn<() => Promise<unknown>>()
+const mockListJobsForWorkflowRunAttempt = jest.fn<() => Promise<unknown>>()
+
 jest.unstable_mockModule('@actions/core', () => core)
-jest.unstable_mockModule('../src/wait.js', () => ({ wait }))
+jest.unstable_mockModule('@actions/github', () => ({
+  getOctokit: mockGetOctokit
+}))
 
-// The module being tested should be imported dynamically. This ensures that the
-// mocks are used in place of any actual dependencies.
 const { run } = await import('../src/main.js')
 
 describe('main.ts', () => {
   beforeEach(() => {
-    // Set the action's inputs as return values from core.getInput().
-    core.getInput.mockImplementation(() => '500')
+    core.getInput.mockImplementation((name: string) => {
+      const inputs: Record<string, string> = {
+        repository: 'owner/repo',
+        server_url: 'https://github.com',
+        workflow: 'CI',
+        run_id: '12345',
+        run_attempt: '1',
+        job: 'build',
+        github_token: 'test-token'
+      }
+      return inputs[name] || ''
+    })
 
-    // Mock the wait function so that it does not actually wait.
-    wait.mockImplementation(() => Promise.resolve('done!'))
+    const mockOctokit = {
+      rest: {
+        actions: {
+          getWorkflowRun: mockGetWorkflowRun,
+          listJobsForWorkflowRunAttempt: mockListJobsForWorkflowRunAttempt
+        }
+      }
+    }
+
+    mockGetOctokit.mockReturnValue(mockOctokit)
+
+    mockGetWorkflowRun.mockResolvedValue({
+      data: {
+        name: 'CI Workflow',
+        path: '.github/workflows/ci.yml',
+        run_number: 42
+      }
+    })
+
+    mockListJobsForWorkflowRunAttempt.mockResolvedValue({
+      data: {
+        jobs: [
+          {
+            id: 54321,
+            name: 'build',
+            status: 'completed',
+            conclusion: 'success',
+            started_at: '2024-01-01T00:00:00Z',
+            completed_at: '2024-01-01T00:05:00Z',
+            head_sha: 'abc123'
+          }
+        ]
+      }
+    })
   })
 
   afterEach(() => {
     jest.resetAllMocks()
   })
 
-  it('Sets the time output', async () => {
+  it('retrieves job information and sets outputs', async () => {
     await run()
 
-    // Verify the time output was set.
-    expect(core.setOutput).toHaveBeenNthCalledWith(
-      1,
-      'time',
-      // Simple regex to match a time string in the format HH:MM:SS.
-      expect.stringMatching(/^\d{2}:\d{2}:\d{2}/)
+    expect(core.setOutput).toHaveBeenCalledWith(
+      'run_url',
+      'https://github.com/owner/repo/actions/runs/12345'
+    )
+    expect(core.setOutput).toHaveBeenCalledWith('job_id', '54321')
+    expect(core.setOutput).toHaveBeenCalledWith('job_name', 'build')
+    expect(core.setOutput).toHaveBeenCalledWith(
+      'job_url',
+      'https://github.com/owner/repo/actions/runs/12345/job/54321'
+    )
+    expect(core.setOutput).toHaveBeenCalledWith(
+      'job_summary_url',
+      'https://github.com/owner/repo/actions/runs/12345'
+    )
+    expect(core.setOutput).toHaveBeenCalledWith('job_status', 'completed')
+    expect(core.setOutput).toHaveBeenCalledWith('job_conclusion', 'success')
+    expect(core.setOutput).toHaveBeenCalledWith('workflow_name', 'CI Workflow')
+    expect(core.setOutput).toHaveBeenCalledWith('run_number', '42')
+  })
+
+  it('handles job not found error', async () => {
+    mockListJobsForWorkflowRunAttempt.mockResolvedValue({
+      data: {
+        jobs: []
+      }
+    })
+
+    await run()
+
+    expect(core.setFailed).toHaveBeenCalledWith(
+      'Job "build" not found in workflow run 12345'
     )
   })
 
-  it('Sets a failed status', async () => {
-    // Clear the getInput mock and return an invalid value.
-    core.getInput.mockClear().mockReturnValueOnce('this is not a number')
-
-    // Clear the wait mock and return a rejected promise.
-    wait
-      .mockClear()
-      .mockRejectedValueOnce(new Error('milliseconds is not a number'))
+  it('handles API errors gracefully', async () => {
+    mockGetWorkflowRun.mockRejectedValue(new Error('API Error'))
 
     await run()
 
-    // Verify that the action was marked as failed.
-    expect(core.setFailed).toHaveBeenNthCalledWith(
-      1,
-      'milliseconds is not a number'
-    )
+    expect(core.setFailed).toHaveBeenCalledWith('API Error')
   })
 })
