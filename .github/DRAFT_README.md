@@ -16,8 +16,6 @@ default workflow context.
 - 🔗 **Job Summary URL**: Direct link to job summary and logs
 - 📊 **Comprehensive Job Information**: Status, conclusion, timing, and more
 - 🏗️ **Workflow Metadata**: Workflow name, path, and run number
-- 🔧 **Extensible Design**: Built to grow with additional features
-- 🛡️ **Type-Safe**: Written in TypeScript with full type safety
 
 ## Quick Start
 
@@ -85,15 +83,13 @@ jobs:
         id: job-info
 
       - name: Comment PR with Job Summary
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `✅ Build completed! [View job summary](${{ steps.job-info.outputs.job_summary_url }})`
-            })
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          JOB_SUMMARY_URL: ${{ steps.job-info.outputs.job_summary_url }}
+        run: |
+          gh pr comment $env:PR_NUMBER --body "✅ Build completed! [View job summary]($env:JOB_SUMMARY_URL)"
 ```
 
 ### 2. Send Slack Notification with Job Details
@@ -131,15 +127,14 @@ jobs:
 
 - name: Create Issue
   if: failure()
-  uses: actions/github-script@v7
-  with:
-    script: |
-      github.rest.issues.create({
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        title: `Build failed: ${context.workflow} #${context.runNumber}`,
-        body: `The workflow failed. [View job logs](${{ steps.job-info.outputs.job_url }})`
-      })
+  shell: pwsh
+  env:
+    GH_TOKEN: ${{ github.token }}
+    WORKFLOW_NAME: ${{ github.workflow }}
+    RUN_NUMBER: ${{ github.run_number }}
+    JOB_URL: ${{ steps.job-info.outputs.job_url }}
+  run: |
+    gh issue create --title "Build failed: $env:WORKFLOW_NAME #$env:RUN_NUMBER" --body "The workflow failed. [View job logs]($env:JOB_URL)"
 ```
 
 ### 4. Direct Link to Specific Job Summary
@@ -152,17 +147,15 @@ jobs:
     include_job_summary_anchor: true
 
 - name: Post Comment with Direct Link
-  uses: actions/github-script@v7
-  with:
-    script: |
-      // This will link directly to the specific job within the workflow run
-      // Example: https://github.com/owner/repo/actions/runs/12345#summary-67890
-      github.rest.issues.createComment({
-        issue_number: context.issue.number,
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        body: `📊 [View job summary directly](${{ steps.job-info.outputs.job_summary_url }})`
-      })
+  shell: pwsh
+  env:
+    GH_TOKEN: ${{ github.token }}
+    PR_NUMBER: ${{ github.event.pull_request.number }}
+    JOB_SUMMARY_URL: ${{ steps.job-info.outputs.job_summary_url }}
+  run: |
+    # This will link directly to the specific job within the workflow run
+    # Example: https://github.com/owner/repo/actions/runs/12345#summary-67890
+    gh pr comment $env:PR_NUMBER --body "📊 [View job summary directly]($env:JOB_SUMMARY_URL)"
 ```
 
 ## Development
@@ -196,39 +189,6 @@ You can test the action locally using the `@github/local-action` tool:
 ```bash
 npm run local-action
 ```
-
-### Project Structure
-
-```text
-get-job-summary/
-├── src/
-│   ├── main.ts      # Main action logic
-│   └── index.ts     # Entry point
-├── __tests__/       # Test files
-├── dist/            # Compiled output
-├── action.yml       # Action metadata
-└── package.json     # Dependencies and scripts
-```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Versioning
-
-This action follows semantic versioning. When creating a new release:
-
-1. Update the version in `package.json`
-2. Run `npm run bundle` to build the action
-3. Commit the changes
-4. Create a new release with a tag (e.g., `v1.0.0`)
-5. Update the major version tag (e.g., `v1`) to point to the latest release
 
 ## License
 
