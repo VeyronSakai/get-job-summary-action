@@ -1,9 +1,9 @@
 # Get Job Summary GitHub Action
 
-[![GitHub Super-Linter](https://github.com/yuki/get-job-summary/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
-![CI](https://github.com/yuki/get-job-summary/actions/workflows/ci.yml/badge.svg)
-[![Check dist/](https://github.com/yuki/get-job-summary/actions/workflows/check-dist.yml/badge.svg)](https://github.com/yuki/get-job-summary/actions/workflows/check-dist.yml)
-[![CodeQL](https://github.com/yuki/get-job-summary/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/yuki/get-job-summary/actions/workflows/codeql-analysis.yml)
+[![GitHub Super-Linter](https://github.com/VeyronSakai/get-job-summary/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
+![CI](https://github.com/VeyronSakai/get-job-summary/actions/workflows/ci.yml/badge.svg)
+[![Check dist/](https://github.com/VeyronSakai/get-job-summary/actions/workflows/check-dist.yml/badge.svg)](https://github.com/VeyronSakai/get-job-summary/actions/workflows/check-dist.yml)
+[![CodeQL](https://github.com/VeyronSakai/get-job-summary/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/VeyronSakai/get-job-summary/actions/workflows/codeql-analysis.yml)
 [![Coverage](./badges/coverage.svg)](./badges/coverage.svg)
 
 A TypeScript-based GitHub Action to retrieve job summary URLs and comprehensive
@@ -23,7 +23,7 @@ default workflow context.
 
 ```yaml
 - name: Get Job Summary
-  uses: yuki/get-job-summary@v1
+  uses: VeyronSakai/get-job-summary@v0.1
   id: job-info
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -81,7 +81,7 @@ jobs:
         run: npm test
 
       - name: Get Job Summary
-        uses: yuki/get-job-summary@v1
+        uses: VeyronSakai/get-job-summary@v0.1
         id: job-info
 
       - name: Comment PR with Job Summary
@@ -100,7 +100,7 @@ jobs:
 
 ```yaml
 - name: Get Job Summary
-  uses: yuki/get-job-summary@v1
+  uses: VeyronSakai/get-job-summary@v0.1
   id: job-info
 
 - name: Notify Slack
@@ -126,7 +126,7 @@ jobs:
 ```yaml
 - name: Get Job Summary
   if: failure()
-  uses: yuki/get-job-summary@v1
+  uses: VeyronSakai/get-job-summary@v0.1
   id: job-info
 
 - name: Create Issue
@@ -146,7 +146,7 @@ jobs:
 
 ```yaml
 - name: Get Job Summary with Anchor
-  uses: yuki/get-job-summary@v1
+  uses: VeyronSakai/get-job-summary@v0.1
   id: job-info
   with:
     include_job_summary_anchor: true
@@ -176,7 +176,7 @@ jobs:
 
 ```bash
 # Clone the repository
-git clone https://github.com/yuki/get-job-summary.git
+git clone https://github.com/VeyronSakai/get-job-summary.git
 cd get-job-summary
 
 # Install dependencies
