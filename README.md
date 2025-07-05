@@ -1,21 +1,25 @@
 # Get Job Summary GitHub Action
 
+[![GitHub Super-Linter](https://github.com/VeyronSakai/get-job-summary/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
+![CI](https://github.com/VeyronSakai/get-job-summary/actions/workflows/ci.yml/badge.svg)
+[![Check dist/](https://github.com/VeyronSakai/get-job-summary/actions/workflows/check-dist.yml/badge.svg)](https://github.com/VeyronSakai/get-job-summary/actions/workflows/check-dist.yml)
+[![CodeQL](https://github.com/VeyronSakai/get-job-summary/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/VeyronSakai/get-job-summary/actions/workflows/codeql-analysis.yml)
+[![Coverage](./badges/coverage.svg)](./badges/coverage.svg)
+
 A TypeScript-based GitHub Action to retrieve job summary URLs and comprehensive
-job information from GitHub Actions workflows.
+job information from GitHub Actions workflows. This action provides easy access
+to job logs, summaries, and metadata that are not typically available in the
+default workflow context.
 
 ## Features
 
-This action provides comprehensive information about GitHub Actions jobs,
-including:
+- 🔗 **Job Summary URL**: Direct link to job summary and logs
+- 📊 **Comprehensive Job Information**: Status, conclusion, timing, and more
+- 🏗️ **Workflow Metadata**: Workflow name, path, and run number
+- 🔧 **Extensible Design**: Built to grow with additional features
+- 🛡️ **Type-Safe**: Written in TypeScript with full type safety
 
-- Job Summary URL for easy access to job logs and summaries
-- Job metadata (status, conclusion, timing)
-- Workflow information
-- Extensible design for future enhancements
-
-## Usage
-
-### Basic Usage
+## Quick Start
 
 ```yaml
 - name: Get Job Summary
@@ -25,36 +29,7 @@ including:
     github_token: ${{ secrets.GITHUB_TOKEN }}
 
 - name: Display Job Summary URL
-  run: echo "Job Summary URL: ${{ steps.job-info.outputs.job_summary_url }}"
-```
-
-### Advanced Usage with Custom Parameters
-
-```yaml
-- name: Get Job Summary for Specific Job
-  uses: VeyronSakai/get-job-summary@v0.1
-  id: job-info
-  with:
-    repository: ${{ github.repository }}
-    run_id: ${{ github.run_id }}
-    job: 'build'
-    github_token: ${{ secrets.GITHUB_TOKEN }}
-```
-
-### Get Job Summary URL with Anchor
-
-```yaml
-- name: Get Job Summary with Direct Link to Job
-  uses: VeyronSakai/get-job-summary@v0.1
-  id: job-info
-  with:
-    include_job_summary_anchor: true
-    github_token: ${{ secrets.GITHUB_TOKEN }}
-
-- name: Display Job Summary URL with Anchor
-  run: |
-    # This will output: https://github.com/owner/repo/actions/runs/12345#summary-67890
-    echo "Direct link to job summary: ${{ steps.job-info.outputs.job_summary_url }}"
+  run: echo "Job Summary: ${{ steps.job-info.outputs.job_summary_url }}"
 ```
 
 ## Inputs
@@ -72,27 +47,29 @@ including:
 
 ## Outputs
 
-| Output                | Description                              |
-| --------------------- | ---------------------------------------- |
-| `run_url`             | The URL of the workflow run              |
-| `job_id`              | The ID of the job                        |
-| `job_name`            | The name of the job                      |
-| `job_url`             | The URL of the job                       |
-| `job_summary_url`     | The URL of the workflow run summary page |
-| `job_summary_raw_url` | The raw URL of the job logs              |
-| `job_status`          | The status of the job                    |
-| `job_conclusion`      | The conclusion of the job                |
-| `job_started_at`      | When the job started                     |
-| `job_completed_at`    | When the job completed                   |
-| `workflow_name`       | The name of the workflow                 |
-| `workflow_path`       | The path of the workflow file            |
-| `run_number`          | The run number of the workflow           |
+| Output                | Description                                                   |
+| --------------------- | ------------------------------------------------------------- |
+| `run_url`             | The URL of the workflow run                                   |
+| `job_id`              | The ID of the job                                             |
+| `job_name`            | The name of the job                                           |
+| `job_url`             | The URL of the job                                            |
+| `job_summary_url`     | The URL of the workflow run summary page                      |
+| `job_summary_raw_url` | The raw URL of the job logs                                   |
+| `job_status`          | The status of the job (queued, in_progress, completed)        |
+| `job_conclusion`      | The conclusion of the job (success, failure, cancelled, etc.) |
+| `job_started_at`      | When the job started (ISO 8601 format)                        |
+| `job_completed_at`    | When the job completed (ISO 8601 format)                      |
+| `workflow_name`       | The name of the workflow                                      |
+| `workflow_path`       | The path of the workflow file                                 |
+| `run_number`          | The run number of the workflow                                |
 
-## Example Workflow
+## Use Cases
+
+### 1. Comment on Pull Request with Job Summary
 
 ```yaml
 name: Build and Test
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   build:
@@ -108,7 +85,6 @@ jobs:
         id: job-info
 
       - name: Comment PR with Job Summary
-        if: github.event_name == 'pull_request'
         uses: actions/github-script@v7
         with:
           script: |
@@ -118,6 +94,75 @@ jobs:
               repo: context.repo.repo,
               body: `✅ Build completed! [View job summary](${{ steps.job-info.outputs.job_summary_url }})`
             })
+```
+
+### 2. Send Slack Notification with Job Details
+
+```yaml
+- name: Get Job Summary
+  uses: VeyronSakai/get-job-summary@v0.1
+  id: job-info
+
+- name: Notify Slack
+  uses: slackapi/slack-github-action@v1
+  with:
+    payload: |
+      {
+        "text": "Workflow completed",
+        "blocks": [
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*${{ steps.job-info.outputs.workflow_name }}* #${{ steps.job-info.outputs.run_number }}\nStatus: ${{ steps.job-info.outputs.job_status }}\n<${{ steps.job-info.outputs.job_summary_url }}|View Summary>"
+            }
+          }
+        ]
+      }
+```
+
+### 3. Create Issue on Failure with Job Link
+
+```yaml
+- name: Get Job Summary
+  if: failure()
+  uses: VeyronSakai/get-job-summary@v0.1
+  id: job-info
+
+- name: Create Issue
+  if: failure()
+  uses: actions/github-script@v7
+  with:
+    script: |
+      github.rest.issues.create({
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        title: `Build failed: ${context.workflow} #${context.runNumber}`,
+        body: `The workflow failed. [View job logs](${{ steps.job-info.outputs.job_url }})`
+      })
+```
+
+### 4. Direct Link to Specific Job Summary
+
+```yaml
+- name: Get Job Summary with Anchor
+  uses: VeyronSakai/get-job-summary@v0.1
+  id: job-info
+  with:
+    include_job_summary_anchor: true
+
+- name: Post Comment with Direct Link
+  uses: actions/github-script@v7
+  with:
+    script: |
+      // This will link directly to the specific job within the workflow run
+      // Example: https://github.com/owner/repo/actions/runs/12345#summary-67890
+      github.rest.issues.createComment({
+        issue_number: context.issue.number,
+        owner: context.repo.owner,
+        repo: context.repo.repo,
+        body: `📊 [View job summary directly](${{ steps.job-info.outputs.job_summary_url }})`
+      })
 ```
 
 ## Development
@@ -141,7 +186,7 @@ npm install
 npm test
 
 # Build the action
-npm run package
+npm run bundle
 ```
 
 ### Testing Locally
@@ -152,7 +197,48 @@ You can test the action locally using the `@github/local-action` tool:
 npm run local-action
 ```
 
+### Project Structure
+
+```text
+get-job-summary/
+├── src/
+│   ├── main.ts      # Main action logic
+│   └── index.ts     # Entry point
+├── __tests__/       # Test files
+├── dist/            # Compiled output
+├── action.yml       # Action metadata
+└── package.json     # Dependencies and scripts
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## Versioning
+
+This action follows semantic versioning. When creating a new release:
+
+1. Update the version in `package.json`
+2. Run `npm run bundle` to build the action
+3. Commit the changes
+4. Create a new release with a tag (e.g., `v1.0.0`)
+5. Update the major version tag (e.g., `v1`) to point to the latest release
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 for details.
+
+## Acknowledgments
+
+- Inspired by
+  [ipdxco/job-summary-url-action](https://github.com/ipdxco/job-summary-url-action)
+- Built with [GitHub Actions Toolkit](https://github.com/actions/toolkit)
+- TypeScript template from
+  [actions/typescript-action](https://github.com/actions/typescript-action)
