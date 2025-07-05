@@ -19,7 +19,7 @@ including:
 
 ```yaml
 - name: Get Job Summary
-  uses: your-username/get-job-summary@v1
+  uses: VeyronSakai/get-job-summary@v0.1
   id: job-info
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -32,7 +32,7 @@ including:
 
 ```yaml
 - name: Get Job Summary for Specific Job
-  uses: your-username/get-job-summary@v1
+  uses: VeyronSakai/get-job-summary@v0.1
   id: job-info
   with:
     repository: ${{ github.repository }}
@@ -45,7 +45,7 @@ including:
 
 ```yaml
 - name: Get Job Summary with Direct Link to Job
-  uses: your-username/get-job-summary@v1
+  uses: VeyronSakai/get-job-summary@v0.1
   id: job-info
   with:
     include_job_summary_anchor: true
@@ -104,7 +104,7 @@ jobs:
         run: npm test
 
       - name: Get Job Summary
-        uses: your-username/get-job-summary@v1
+        uses: VeyronSakai/get-job-summary@v0.1
         id: job-info
 
       - name: Comment PR with Job Summary
@@ -131,7 +131,7 @@ jobs:
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/get-job-summary.git
+git clone https://github.com/VeyronSakai/get-job-summary.git
 cd get-job-summary
 
 # Install dependencies
