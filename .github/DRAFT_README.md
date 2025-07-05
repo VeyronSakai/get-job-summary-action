@@ -190,39 +190,6 @@ You can test the action locally using the `@github/local-action` tool:
 npm run local-action
 ```
 
-### Project Structure
-
-```text
-get-job-summary/
-├── src/
-│   ├── main.ts      # Main action logic
-│   └── index.ts     # Entry point
-├── __tests__/       # Test files
-├── dist/            # Compiled output
-├── action.yml       # Action metadata
-└── package.json     # Dependencies and scripts
-```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Versioning
-
-This action follows semantic versioning. When creating a new release:
-
-1. Update the version in `package.json`
-2. Run `npm run bundle` to build the action
-3. Commit the changes
-4. Create a new release with a tag (e.g., `v1.0.0`)
-5. Update the major version tag (e.g., `v1`) to point to the latest release
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
