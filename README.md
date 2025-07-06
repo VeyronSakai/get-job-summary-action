@@ -87,15 +87,13 @@ jobs:
         id: job-info
 
       - name: Comment PR with Job Summary
-        uses: actions/github-script@v7
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: `✅ Build completed! [View job summary](${{ steps.job-info.outputs.job_summary_url }})`
-            })
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          JOB_SUMMARY_URL: ${{ steps.job-info.outputs.job_summary_url }}
+        run: |
+          gh pr comment $env:PR_NUMBER --body "✅ Build completed! [View job summary]($env:JOB_SUMMARY_URL)"
 ```
 
 ### 2. Send Slack Notification with Job Details
@@ -133,15 +131,14 @@ jobs:
 
 - name: Create Issue
   if: failure()
-  uses: actions/github-script@v7
-  with:
-    script: |
-      github.rest.issues.create({
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        title: `Build failed: ${context.workflow} #${context.runNumber}`,
-        body: `The workflow failed. [View job logs](${{ steps.job-info.outputs.job_url }})`
-      })
+  shell: pwsh
+  env:
+    GH_TOKEN: ${{ github.token }}
+    WORKFLOW_NAME: ${{ github.workflow }}
+    RUN_NUMBER: ${{ github.run_number }}
+    JOB_URL: ${{ steps.job-info.outputs.job_url }}
+  run: |
+    gh issue create --title "Build failed: $env:WORKFLOW_NAME #$env:RUN_NUMBER" --body "The workflow failed. [View job logs]($env:JOB_URL)"
 ```
 
 ### 4. Direct Link to Specific Job Summary
@@ -154,17 +151,15 @@ jobs:
     include_job_summary_anchor: true
 
 - name: Post Comment with Direct Link
-  uses: actions/github-script@v7
-  with:
-    script: |
-      // This will link directly to the specific job within the workflow run
-      // Example: https://github.com/owner/repo/actions/runs/12345#summary-67890
-      github.rest.issues.createComment({
-        issue_number: context.issue.number,
-        owner: context.repo.owner,
-        repo: context.repo.repo,
-        body: `📊 [View job summary directly](${{ steps.job-info.outputs.job_summary_url }})`
-      })
+  shell: pwsh
+  env:
+    GH_TOKEN: ${{ github.token }}
+    PR_NUMBER: ${{ github.event.pull_request.number }}
+    JOB_SUMMARY_URL: ${{ steps.job-info.outputs.job_summary_url }}
+  run: |
+    # This will link directly to the specific job within the workflow run
+    # Example: https://github.com/owner/repo/actions/runs/12345#summary-67890
+    gh pr comment $env:PR_NUMBER --body "📊 [View job summary directly]($env:JOB_SUMMARY_URL)"
 ```
 
 ## Development
@@ -198,10 +193,6 @@ You can test the action locally using the `@github/local-action` tool:
 ```bash
 npm run local-action
 ```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
