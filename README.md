@@ -28,7 +28,10 @@ default workflow context.
     github_token: ${{ secrets.GITHUB_TOKEN }}
 
 - name: Display Job Summary URL
-  run: echo "Job Summary: ${{ steps.job-info.outputs.job_summary_url }}"
+  env:
+    JOB_SUMMARY_URL: ${{ steps.job-info.outputs.job_summary_url }}
+  shell: pwsh
+  run: Write-Output "Job Summary: $env:JOB_SUMMARY_URL"
 ```
 
 ## Inputs
