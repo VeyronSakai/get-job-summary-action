@@ -1,17 +1,17 @@
 {
-  "name": "get-job-summary",
+  "name": "get-job-summary-action",
   "description": "GitHub Action to get job summary URL and other job information",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "author": "",
   "type": "module",
   "private": true,
-  "homepage": "https://github.com/yuki/get-job-summary",
+  "homepage": "https://github.com/yuki/get-job-summary-action",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yuki/get-job-summary.git"
+    "url": "git+https://github.com/yuki/get-job-summary-action.git"
   },
   "bugs": {
-    "url": "https://github.com/yuki/get-job-summary/issues"
+    "url": "https://github.com/yuki/get-job-summary-action/issues"
   },
   "keywords": [
     "actions"

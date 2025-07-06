@@ -1,11 +1,11 @@
-# Get Job Summary GitHub Action
+# Get Job Summary Action
 
-[![GitHub Super-Linter](https://github.com/VeyronSakai/get-job-summary/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
-![CI](https://github.com/VeyronSakai/get-job-summary/actions/workflows/ci.yml/badge.svg)
-[![Check dist/](https://github.com/VeyronSakai/get-job-summary/actions/workflows/check-dist.yml/badge.svg)](https://github.com/VeyronSakai/get-job-summary/actions/workflows/check-dist.yml)
-[![CodeQL](https://github.com/VeyronSakai/get-job-summary/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/VeyronSakai/get-job-summary/actions/workflows/codeql-analysis.yml)
+[![GitHub Super-Linter](https://github.com/VeyronSakai/get-job-summary-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
+![CI](https://github.com/VeyronSakai/get-job-summary-action/actions/workflows/ci.yml/badge.svg)
+[![Check dist/](https://github.com/VeyronSakai/get-job-summary-action/actions/workflows/check-dist.yml/badge.svg)](https://github.com/VeyronSakai/get-job-summary-action/actions/workflows/check-dist.yml)
+[![CodeQL](https://github.com/VeyronSakai/get-job-summary-action/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/VeyronSakai/get-job-summary-action/actions/workflows/codeql-analysis.yml)
 [![Coverage](./badges/coverage.svg)](./badges/coverage.svg)
-[![Licensed](https://github.com/VeyronSakai/get-job-summary/actions/workflows/licensed.yml/badge.svg)](https://github.com/VeyronSakai/get-job-summary/actions/workflows/licensed.yml)
+[![Licensed](https://github.com/VeyronSakai/get-job-summary-action/actions/workflows/licensed.yml/badge.svg)](https://github.com/VeyronSakai/get-job-summary-action/actions/workflows/licensed.yml)
 
 A TypeScript-based GitHub Action to retrieve job summary URLs and comprehensive
 job information from GitHub Actions workflows. This action provides easy access
@@ -17,14 +17,12 @@ default workflow context.
 - 🔗 **Job Summary URL**: Direct link to job summary and logs
 - 📊 **Comprehensive Job Information**: Status, conclusion, timing, and more
 - 🏗️ **Workflow Metadata**: Workflow name, path, and run number
-- 🔧 **Extensible Design**: Built to grow with additional features
-- 🛡️ **Type-Safe**: Written in TypeScript with full type safety
 
 ## Quick Start
 
 ```yaml
 - name: Get Job Summary
-  uses: VeyronSakai/get-job-summary@v0.1
+  uses: VeyronSakai/get-job-summary-action@v0.1
   id: job-info
   with:
     github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -82,7 +80,7 @@ jobs:
         run: npm test
 
       - name: Get Job Summary
-        uses: VeyronSakai/get-job-summary@v0.1
+        uses: VeyronSakai/get-job-summary-action@v0.1
         id: job-info
 
       - name: Comment PR with Job Summary
@@ -101,7 +99,7 @@ jobs:
 
 ```yaml
 - name: Get Job Summary
-  uses: VeyronSakai/get-job-summary@v0.1
+  uses: VeyronSakai/get-job-summary-action@v0.1
   id: job-info
 
 - name: Notify Slack
@@ -127,7 +125,7 @@ jobs:
 ```yaml
 - name: Get Job Summary
   if: failure()
-  uses: VeyronSakai/get-job-summary@v0.1
+  uses: VeyronSakai/get-job-summary-action@v0.1
   id: job-info
 
 - name: Create Issue
@@ -147,7 +145,7 @@ jobs:
 
 ```yaml
 - name: Get Job Summary with Anchor
-  uses: VeyronSakai/get-job-summary@v0.1
+  uses: VeyronSakai/get-job-summary-action@v0.1
   id: job-info
   with:
     include_job_summary_anchor: true
@@ -177,8 +175,8 @@ jobs:
 
 ```bash
 # Clone the repository
-git clone https://github.com/VeyronSakai/get-job-summary.git
-cd get-job-summary
+git clone https://github.com/VeyronSakai/get-job-summary-action.git
+cd get-job-summary-action
 
 # Install dependencies
 npm install
@@ -198,38 +196,9 @@ You can test the action locally using the `@github/local-action` tool:
 npm run local-action
 ```
 
-### Project Structure
-
-```text
-get-job-summary/
-├── src/
-│   ├── main.ts      # Main action logic
-│   └── index.ts     # Entry point
-├── __tests__/       # Test files
-├── dist/            # Compiled output
-├── action.yml       # Action metadata
-└── package.json     # Dependencies and scripts
-```
-
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## Versioning
-
-This action follows semantic versioning. When creating a new release:
-
-1. Update the version in `package.json`
-2. Run `npm run bundle` to build the action
-3. Commit the changes
-4. Create a new release with a tag (e.g., `v1.0.0`)
-5. Update the major version tag (e.g., `v1`) to point to the latest release
 
 ## License
 
