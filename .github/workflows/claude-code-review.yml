@@ -19,8 +19,7 @@ jobs:
     #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
 
     runs-on: ubuntu-latest
-    # checkov:skip=CKV2_GHA_1:id-token write permission is required for OIDC authentication with Claude
-    permissions:
+    permissions: # checkov:skip=CKV2_GHA_1 id-token write permission is required for OIDC authentication with Claude
       contents: read
       pull-requests: write # Changed from read - Claude needs write to post review comments
       issues: write # Changed from read - Claude needs write to post comments

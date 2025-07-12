@@ -18,8 +18,7 @@ jobs:
       (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
       (github.event_name == 'issues' && (contains(github.event.issue.body, '@claude') || contains(github.event.issue.title, '@claude')))
     runs-on: ubuntu-latest
-    # checkov:skip=CKV2_GHA_1:id-token write permission is required for OIDC authentication with Claude
-    permissions:
+    permissions: # checkov:skip=CKV2_GHA_1 id-token write permission is required for OIDC authentication with Claude
       contents: read
       pull-requests: write # Changed from read - Claude needs write to post comments
       issues: write # Changed from read - Claude needs write to post comments
