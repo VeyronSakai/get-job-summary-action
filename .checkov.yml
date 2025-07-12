@@ -1,3 +1,13 @@
-# Checkov configuration
+# Checkov configuration for Claude workflows
+# These workflows require specific write permissions for Claude to function properly
 skip-check:
-  - CKV2_GHA_1 # Skip "Ensure top-level permissions are not set to write-all" - false positive for Claude workflows
+  # Skip only for specific files that need write permissions for Claude
+  - id: CKV2_GHA_1
+    file_regex:
+      - .*claude.*\.yml$ # Only skip for files with 'claude' in the name
+    comment: |
+      Claude workflows require specific write permissions:
+      - pull-requests: write (to post PR comments)
+      - issues: write (to post issue comments)  
+      - id-token: write (for OIDC authentication)
+      These are NOT write-all permissions
