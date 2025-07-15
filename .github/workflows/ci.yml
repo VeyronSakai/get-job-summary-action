@@ -77,7 +77,8 @@ jobs:
           JOB_URL: ${{ steps.test-action.outputs.job_url }}
           JOB_SUMMARY_URL: ${{ steps.test-action.outputs.job_summary_url }}
           WORKFLOW_NAME: ${{ steps.test-action.outputs.workflow_name }}
-          JOB_SUMMARY_URL_ANCHOR: ${{ steps.test-action-anchor.outputs.job_summary_url }}
+          JOB_SUMMARY_URL_ANCHOR:
+            ${{ steps.test-action-anchor.outputs.job_summary_url }}
         run: |
           echo "=== Without Anchor ==="
           echo "Run URL: $RUN_URL"
@@ -100,7 +101,8 @@ jobs:
           JOB_STATUS: ${{ steps.test-action.outputs.job_status }}
           WORKFLOW_NAME: ${{ steps.test-action.outputs.workflow_name }}
           RUN_NUMBER: ${{ steps.test-action.outputs.run_number }}
-          JOB_SUMMARY_URL_ANCHOR: ${{ steps.test-action-anchor.outputs.job_summary_url }}
+          JOB_SUMMARY_URL_ANCHOR:
+            ${{ steps.test-action-anchor.outputs.job_summary_url }}
         run: |
           {
             echo "# GitHub Actions Test Job Summary"
