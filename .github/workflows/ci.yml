@@ -70,19 +70,37 @@ jobs:
 
       - name: Print Outputs
         id: output
+        env:
+          RUN_URL: ${{ steps.test-action.outputs.run_url }}
+          JOB_ID: ${{ steps.test-action.outputs.job_id }}
+          JOB_NAME: ${{ steps.test-action.outputs.job_name }}
+          JOB_URL: ${{ steps.test-action.outputs.job_url }}
+          JOB_SUMMARY_URL: ${{ steps.test-action.outputs.job_summary_url }}
+          WORKFLOW_NAME: ${{ steps.test-action.outputs.workflow_name }}
+          JOB_SUMMARY_URL_ANCHOR: ${{ steps.test-action-anchor.outputs.job_summary_url }}
         run: |
           echo "=== Without Anchor ==="
-          echo "Run URL: ${{ steps.test-action.outputs.run_url }}"
-          echo "Job ID: ${{ steps.test-action.outputs.job_id }}"
-          echo "Job Name: ${{ steps.test-action.outputs.job_name }}"
-          echo "Job URL: ${{ steps.test-action.outputs.job_url }}"
-          echo "Job Summary URL: ${{ steps.test-action.outputs.job_summary_url }}"
-          echo "Workflow Name: ${{ steps.test-action.outputs.workflow_name }}"
+          echo "Run URL: $RUN_URL"
+          echo "Job ID: $JOB_ID"
+          echo "Job Name: $JOB_NAME"
+          echo "Job URL: $JOB_URL"
+          echo "Job Summary URL: $JOB_SUMMARY_URL"
+          echo "Workflow Name: $WORKFLOW_NAME"
           echo ""
           echo "=== With Anchor ==="
-          echo "Job Summary URL (with anchor): ${{ steps.test-action-anchor.outputs.job_summary_url }}"
+          echo "Job Summary URL (with anchor): $JOB_SUMMARY_URL_ANCHOR"
 
       - name: Write Job Summary
+        env:
+          RUN_URL: ${{ steps.test-action.outputs.run_url }}
+          JOB_ID: ${{ steps.test-action.outputs.job_id }}
+          JOB_NAME: ${{ steps.test-action.outputs.job_name }}
+          JOB_URL: ${{ steps.test-action.outputs.job_url }}
+          JOB_SUMMARY_URL: ${{ steps.test-action.outputs.job_summary_url }}
+          JOB_STATUS: ${{ steps.test-action.outputs.job_status }}
+          WORKFLOW_NAME: ${{ steps.test-action.outputs.workflow_name }}
+          RUN_NUMBER: ${{ steps.test-action.outputs.run_number }}
+          JOB_SUMMARY_URL_ANCHOR: ${{ steps.test-action-anchor.outputs.job_summary_url }}
         run: |
           {
             echo "# GitHub Actions Test Job Summary"
@@ -93,20 +111,20 @@ jobs:
             echo ""
             echo "| Output | Value |"
             echo "|--------:|-------|"
-            echo "| Run URL | ${{ steps.test-action.outputs.run_url }} |"
-            echo "| Job ID | ${{ steps.test-action.outputs.job_id }} |"
-            echo "| Job Name | ${{ steps.test-action.outputs.job_name }} |"
-            echo "| Job URL | ${{ steps.test-action.outputs.job_url }} |"
-            echo "| Job Summary URL | ${{ steps.test-action.outputs.job_summary_url }} |"
-            echo "| Job Status | ${{ steps.test-action.outputs.job_status }} |"
-            echo "| Workflow Name | ${{ steps.test-action.outputs.workflow_name }} |"
-            echo "| Run Number | ${{ steps.test-action.outputs.run_number }} |"
+            echo "| Run URL | $RUN_URL |"
+            echo "| Job ID | $JOB_ID |"
+            echo "| Job Name | $JOB_NAME |"
+            echo "| Job URL | $JOB_URL |"
+            echo "| Job Summary URL | $JOB_SUMMARY_URL |"
+            echo "| Job Status | $JOB_STATUS |"
+            echo "| Workflow Name | $WORKFLOW_NAME |"
+            echo "| Run Number | $RUN_NUMBER |"
             echo ""
             echo "## Action Outputs (With Anchor)"
             echo ""
             echo "| Output | Value |"
             echo "|--------:|-------|"
-            echo "| Job Summary URL (with anchor) | ${{ steps.test-action-anchor.outputs.job_summary_url }} |"
+            echo "| Job Summary URL (with anchor) | $JOB_SUMMARY_URL_ANCHOR |"
             echo ""
             echo "✅ Test completed successfully!"
           } >> "$GITHUB_STEP_SUMMARY"
