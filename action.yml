@@ -38,7 +38,7 @@ inputs:
     description:
       'Include anchor to specific job in job_summary_url (e.g., #summary-12345)'
     required: false
-    default: 'false'
+    default: 'true'
 
 outputs:
   run_url:
