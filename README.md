@@ -45,7 +45,7 @@ default workflow context.
 | `run_attempt`                | The attempt number of the workflow run                                   | No       | `${{ github.run_attempt }}` |
 | `job`                        | The job name                                                             | No       | `${{ github.job }}`         |
 | `github_token`               | GitHub token for API access                                              | No       | `${{ github.token }}`       |
-| `include_job_summary_anchor` | Include anchor to specific job in job_summary_url (e.g., #summary-12345) | No       | `false`                     |
+| `include_job_summary_anchor` | Include anchor to specific job in job_summary_url (e.g., #summary-12345) | No       | `true`                      |
 
 ## Outputs
 
