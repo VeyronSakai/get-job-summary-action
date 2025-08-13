@@ -1,6 +1,6 @@
 name: 'Get Job Summary'
 description: 'Get GitHub Actions job summary URL and other job information'
-author: 'Your Name'
+author: 'Yuki Sakai'
 branding:
   icon: 'info'
   color: 'blue'
