@@ -1,7 +1,7 @@
 {
   "name": "get-job-summary-action",
   "description": "GitHub Action to get job summary URL and other job information",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": "",
   "type": "module",
   "private": true,
