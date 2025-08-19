@@ -37,7 +37,7 @@ jobs:
 
       - name: Run Claude Code
         id: claude
-        uses: anthropics/claude-code-action@6d5c92076ba3f5240a002d916ca6f91c5fa05529 # yamllint disable-line rule:line-length
+        uses: anthropics/claude-code-action@02e9ed31816be8cb8d521a26f4ba981e5c89ac5e # yamllint disable-line rule:line-length
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           # Optional setting that allows Claude to read CI results on PRs
