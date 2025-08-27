@@ -8,8 +8,6 @@ on:
       - closed
   workflow_dispatch:
 
-permissions: {}
-
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   PACKAGE_JSON_PATH: package.json
