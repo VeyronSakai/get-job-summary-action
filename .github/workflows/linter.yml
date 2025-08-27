@@ -23,6 +23,8 @@ jobs:
         id: checkout
         uses: actions/checkout@v5
         with:
+          persist-credentials: false
+        with:
           fetch-depth: 0
 
       - name: Setup Node.js

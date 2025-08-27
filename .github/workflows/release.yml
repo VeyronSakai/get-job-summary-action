@@ -10,7 +10,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -81,6 +80,8 @@ jobs:
       github.event.pull_request.base.ref == 'main') || github.event_name ==
       'workflow_dispatch' }}
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
@@ -97,6 +98,9 @@ jobs:
     needs: update-draft
     if: ${{ github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     concurrency:
       group: ${{ github.workflow }}
       cancel-in-progress: true
@@ -105,6 +109,8 @@ jobs:
       SOURCE_BRANCH: github-actions/update-files/${{ github.run_number }}
     steps:
       - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
       - name: Update package.json
         run: |
           $packageJson = Get-Content -Path $env:PACKAGE_JSON_PATH -Raw | ConvertFrom-Json
@@ -153,6 +159,9 @@ jobs:
     needs: [update-draft, paths-filter, check-version]
     environment: Release
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     concurrency:
       group: ${{ github.workflow }}
       cancel-in-progress: false
@@ -166,6 +175,8 @@ jobs:
       VERSION: ${{ needs.update-draft.outputs.tag_name }}
     steps:
       - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
         with:
           ref: main
       - name: Validate version in package.json
@@ -199,6 +210,8 @@ jobs:
             exit 1
           }
       - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
         with:
           ref: ${{ env.VERSION }}
       - name: Update major tag
