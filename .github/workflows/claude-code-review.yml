@@ -12,8 +12,8 @@ on:
 
 jobs:
   claude-review:
-    # Skip Dependabot PRs
-    if: ${{ github.actor != 'dependabot[bot]' }}
+    # Skip bot PRs
+    if: ${{ !endsWith(github.actor, '[bot]') }}
     # Optional: Filter by PR author
     # if: |
     #   github.event.pull_request.user.login == 'external-contributor' ||
