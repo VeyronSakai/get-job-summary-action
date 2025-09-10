@@ -31268,6 +31268,27 @@ async function run() {
             ? `${runUrl}#summary-${job.id}`
             : runUrl;
         const jobSummaryRawUrl = `${serverUrl}/${owner}/${repo}/commit/${job.head_sha}/checks/${job.id}/logs`;
+        // Fetch Job Summary content
+        let jobSummaryContent = '';
+        try {
+            // Get check runs for the job
+            const { data: checkRuns } = await octokit.rest.checks.listForRef({
+                owner,
+                repo,
+                ref: job.head_sha
+            });
+            // Find the check run that matches this job
+            const checkRun = checkRuns.check_runs.find((run) => run.external_id === job.id.toString());
+            if (checkRun && checkRun.output && checkRun.output.summary) {
+                jobSummaryContent = checkRun.output.summary;
+            }
+            else {
+                coreExports.debug(`No job summary found for job ${job.id}`);
+            }
+        }
+        catch (error) {
+            coreExports.warning(`Failed to fetch job summary content: ${error}`);
+        }
         const jobInfo = {
             runUrl,
             jobId: job.id,
@@ -31281,7 +31302,8 @@ async function run() {
             jobCompletedAt: job.completed_at,
             workflowName: workflowRun.name || workflow,
             workflowPath: workflowRun.path || '',
-            runNumber: workflowRun.run_number
+            runNumber: workflowRun.run_number,
+            jobSummaryContent
         };
         coreExports.setOutput('run_url', jobInfo.runUrl);
         coreExports.setOutput('job_id', jobInfo.jobId.toString());
@@ -31296,6 +31318,7 @@ async function run() {
         coreExports.setOutput('workflow_name', jobInfo.workflowName);
         coreExports.setOutput('workflow_path', jobInfo.workflowPath);
         coreExports.setOutput('run_number', jobInfo.runNumber.toString());
+        coreExports.setOutput('job_summary_content', jobInfo.jobSummaryContent);
         coreExports.info(`Job Summary URL: ${jobInfo.jobSummaryUrl}`);
     }
     catch (error) {

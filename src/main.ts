@@ -15,6 +15,7 @@ interface JobInfo {
   workflowName: string
   workflowPath: string
   runNumber: number
+  jobSummaryContent: string
 }
 
 export async function run(): Promise<void> {
@@ -65,6 +66,30 @@ export async function run(): Promise<void> {
       : runUrl
     const jobSummaryRawUrl = `${serverUrl}/${owner}/${repo}/commit/${job.head_sha}/checks/${job.id}/logs`
 
+    // Fetch Job Summary content
+    let jobSummaryContent = ''
+    try {
+      // Get check runs for the job
+      const { data: checkRuns } = await octokit.rest.checks.listForRef({
+        owner,
+        repo,
+        ref: job.head_sha
+      })
+
+      // Find the check run that matches this job
+      const checkRun = checkRuns.check_runs.find(
+        (run) => run.external_id === job.id.toString()
+      )
+
+      if (checkRun && checkRun.output && checkRun.output.summary) {
+        jobSummaryContent = checkRun.output.summary
+      } else {
+        core.debug(`No job summary found for job ${job.id}`)
+      }
+    } catch (error) {
+      core.warning(`Failed to fetch job summary content: ${error}`)
+    }
+
     const jobInfo: JobInfo = {
       runUrl,
       jobId: job.id,
@@ -78,7 +103,8 @@ export async function run(): Promise<void> {
       jobCompletedAt: job.completed_at,
       workflowName: workflowRun.name || workflow,
       workflowPath: workflowRun.path || '',
-      runNumber: workflowRun.run_number
+      runNumber: workflowRun.run_number,
+      jobSummaryContent
     }
 
     core.setOutput('run_url', jobInfo.runUrl)
@@ -94,6 +120,7 @@ export async function run(): Promise<void> {
     core.setOutput('workflow_name', jobInfo.workflowName)
     core.setOutput('workflow_path', jobInfo.workflowPath)
     core.setOutput('run_number', jobInfo.runNumber.toString())
+    core.setOutput('job_summary_content', jobInfo.jobSummaryContent)
 
     core.info(`Job Summary URL: ${jobInfo.jobSummaryUrl}`)
   } catch (error) {

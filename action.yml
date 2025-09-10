@@ -67,6 +67,8 @@ outputs:
     description: 'The path of the workflow file'
   run_number:
     description: 'The run number of the workflow'
+  job_summary_content:
+    description: 'The text content of the job summary'
 
 runs:
   using: 'node20'

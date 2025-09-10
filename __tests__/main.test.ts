@@ -4,6 +4,7 @@ import * as core from '../__fixtures__/core.js'
 const mockGetOctokit = jest.fn()
 const mockGetWorkflowRun = jest.fn<() => Promise<unknown>>()
 const mockListJobsForWorkflowRunAttempt = jest.fn<() => Promise<unknown>>()
+const mockListForRef = jest.fn<() => Promise<unknown>>()
 
 jest.unstable_mockModule('@actions/core', () => core)
 jest.unstable_mockModule('@actions/github', () => ({
@@ -39,6 +40,9 @@ describe('main.ts', () => {
         actions: {
           getWorkflowRun: mockGetWorkflowRun,
           listJobsForWorkflowRunAttempt: mockListJobsForWorkflowRunAttempt
+        },
+        checks: {
+          listForRef: mockListForRef
         }
       }
     }
@@ -64,6 +68,21 @@ describe('main.ts', () => {
             started_at: '2024-01-01T00:00:00Z',
             completed_at: '2024-01-01T00:05:00Z',
             head_sha: 'abc123'
+          }
+        ]
+      }
+    })
+
+    mockListForRef.mockResolvedValue({
+      data: {
+        check_runs: [
+          {
+            id: 99999,
+            external_id: '54321',
+            output: {
+              summary:
+                '## Test Summary\n\nAll tests passed successfully!\n\n- ✅ Unit tests: 100 passed\n- ✅ Integration tests: 50 passed'
+            }
           }
         ]
       }
@@ -95,6 +114,10 @@ describe('main.ts', () => {
     expect(core.setOutput).toHaveBeenCalledWith('job_conclusion', 'success')
     expect(core.setOutput).toHaveBeenCalledWith('workflow_name', 'CI Workflow')
     expect(core.setOutput).toHaveBeenCalledWith('run_number', '42')
+    expect(core.setOutput).toHaveBeenCalledWith(
+      'job_summary_content',
+      '## Test Summary\n\nAll tests passed successfully!\n\n- ✅ Unit tests: 100 passed\n- ✅ Integration tests: 50 passed'
+    )
   })
 
   it('handles job not found error', async () => {
@@ -133,5 +156,35 @@ describe('main.ts', () => {
       'job_summary_url',
       'https://github.com/owner/repo/actions/runs/12345#summary-54321'
     )
+  })
+
+  it('handles missing job summary content gracefully', async () => {
+    mockListForRef.mockResolvedValue({
+      data: {
+        check_runs: []
+      }
+    })
+
+    await run()
+
+    expect(core.setOutput).toHaveBeenCalledWith('job_summary_content', '')
+  })
+
+  it('handles check run without summary output', async () => {
+    mockListForRef.mockResolvedValue({
+      data: {
+        check_runs: [
+          {
+            id: 99999,
+            external_id: '54321',
+            output: null
+          }
+        ]
+      }
+    })
+
+    await run()
+
+    expect(core.setOutput).toHaveBeenCalledWith('job_summary_content', '')
   })
 })
