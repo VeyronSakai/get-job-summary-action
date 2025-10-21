@@ -38,6 +38,8 @@ jobs:
       - name: Install Dependencies
         id: npm-ci
         run: npm ci
+        env:
+          NODE_ENV: development
 
       - name: Setup Ruby
         id: setup-ruby
