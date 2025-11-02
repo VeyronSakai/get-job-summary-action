@@ -52,13 +52,13 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       # If this is a workflow_dispatch event or dependabot PR, update the cached licenses.
-      - if: ${{ github.event_name == 'workflow_dispatch' || github.actor == 'dependabot[bot]' }}
+      - if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && startsWith(github.head_ref, 'dependabot/')) }}
         name: Update Licenses
         id: update-licenses
         run: licensed cache
 
       # Then, commit the updated licenses to the repository.
-      - if: ${{ github.event_name == 'workflow_dispatch' || github.actor == 'dependabot[bot]' }}
+      - if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && startsWith(github.head_ref, 'dependabot/')) }}
         name: Commit Licenses
         id: commit-licenses
         run: |
