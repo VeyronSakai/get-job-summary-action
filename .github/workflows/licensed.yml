@@ -27,6 +27,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           persist-credentials: false
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         id: setup-node
@@ -50,22 +51,22 @@ jobs:
           version: 4.x
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # If this is a workflow_dispatch event, update the cached licenses.
-      - if: ${{ github.event_name == 'workflow_dispatch' }}
+      # If this is a workflow_dispatch event or dependabot PR, update the cached licenses.
+      - if: ${{ github.event_name == 'workflow_dispatch' || github.actor == 'dependabot[bot]' }}
         name: Update Licenses
         id: update-licenses
         run: licensed cache
 
       # Then, commit the updated licenses to the repository.
-      - if: ${{ github.event_name == 'workflow_dispatch' }}
+      - if: ${{ github.event_name == 'workflow_dispatch' || github.actor == 'dependabot[bot]' }}
         name: Commit Licenses
         id: commit-licenses
         run: |
           git config --local user.email "licensed-ci@users.noreply.github.com"
           git config --local user.name "licensed-ci"
           git add .
-          git commit -m "Auto-update license files"
-          git push
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update license files"
+          git push || true
 
       # Last, check the status of the cached licenses.
       - name: Check Licenses
