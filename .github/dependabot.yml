@@ -9,6 +9,8 @@ updates:
         update-types:
           - minor
           - patch
+        cooldown:
+          days: 7
 
   - package-ecosystem: npm
     directory: /
