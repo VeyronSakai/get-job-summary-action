@@ -110,7 +110,7 @@ jobs:
       VERSION: ${{ needs.update-draft.outputs.tag_name }}
       SOURCE_BRANCH: github-actions/update-files/${{ github.run_number }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: true
       - name: Update package.json
@@ -176,7 +176,7 @@ jobs:
     env:
       VERSION: ${{ needs.update-draft.outputs.tag_name }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: true
           ref: main
@@ -210,7 +210,7 @@ jobs:
             Write-Error "Unable to parse version: $env:VERSION"
             exit 1
           }
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: true
           ref: ${{ env.VERSION }}
