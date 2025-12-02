@@ -4,6 +4,9 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    cooldown:
+      minor: 7
+      patch: 7
     groups:
       actions-minor:
         update-types:
@@ -14,6 +17,9 @@ updates:
     directory: /
     schedule:
       interval: monthly
+    cooldown:
+      minor: 7
+      patch: 7
     ignore:
       - dependency-name: '@types/node'
         update-types:
