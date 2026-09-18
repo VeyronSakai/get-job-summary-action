@@ -71,5 +71,13 @@
   "optionalDependencies": {
     "@rollup/rollup-linux-x64-gnu": "*"
   },
+  "overrides": {
+    "@actions/artifact": {
+      "undici": "^6.28.1"
+    },
+    "@github/local-action": {
+      "undici": "^6.28.1"
+    }
+  },
   "main": "jest.config.js"
 }
