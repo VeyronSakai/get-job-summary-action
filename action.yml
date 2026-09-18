@@ -69,5 +69,5 @@ outputs:
     description: 'The run number of the workflow'
 
 runs:
-  using: 'node20'
+  using: 'node24'
   main: 'dist/index.js'
