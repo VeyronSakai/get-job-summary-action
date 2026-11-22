@@ -73,10 +73,10 @@
   },
   "overrides": {
     "@actions/artifact": {
-      "undici": "^6.28.1"
+      "undici": "^6.29.1"
     },
     "@github/local-action": {
-      "undici": "^6.28.1"
+      "undici": "^6.29.1"
     }
   },
   "main": "jest.config.js"
